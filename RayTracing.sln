@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayTracing", "RayTracing\RayTracing.csproj", "{605FBC16-7923-49F8-AF9F-63C216139DC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayTracingTest", "RayTracingTest\RayTracingTest.csproj", "{3E12A20B-B823-423A-83CB-5686133AB1DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{605FBC16-7923-49F8-AF9F-63C216139DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605FBC16-7923-49F8-AF9F-63C216139DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605FBC16-7923-49F8-AF9F-63C216139DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605FBC16-7923-49F8-AF9F-63C216139DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E12A20B-B823-423A-83CB-5686133AB1DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E12A20B-B823-423A-83CB-5686133AB1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E12A20B-B823-423A-83CB-5686133AB1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E12A20B-B823-423A-83CB-5686133AB1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD11A7EB-E168-4256-9611-AEBE3F2A8F0B}
+	EndGlobalSection
+EndGlobal
