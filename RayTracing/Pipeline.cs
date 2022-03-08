@@ -30,8 +30,9 @@ namespace RayTracing
 
             // setup scene
             _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 100, Center = new Point3f(0, -100.5f, -1) }, new LambertianMaterial(new Colorf(0.8f, 0.8f, 0))));
-            _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 0.5f, Center = new Point3f(0, 0, -1) }, new LambertianMaterial(new Colorf(0.7f, 0.3f, 0.3f))));
-            _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 0.5f, Center = new Point3f(-1, 0, -1) }, new MetalMaterial(Colorf.DarkGrey)));
+            _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 0.5f, Center = new Point3f(0, 0, -1) }, new LambertianMaterial(new Colorf(0.1f, 0.2f, 0.5f))));
+            _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 0.5f, Center = new Point3f(-1, 0, -1) }, new DielectricMaterial(1.5f)));
+            _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = -0.4f, Center = new Point3f(-1, 0, -1) }, new DielectricMaterial(1.5f)));
             _scene.HittableList.AddHittable(new MeshObject(new Sphere() { Radius = 0.5f, Center = new Point3f(1, 0, -1) }, new MetalMaterial(new Colorf(0.8f, 0.6f, 0.2f))));
         }
 

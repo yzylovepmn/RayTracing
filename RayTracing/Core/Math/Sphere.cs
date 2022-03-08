@@ -37,7 +37,6 @@ namespace RayTracing.Core
             Float a = ray.Direction.LengthSquared;
             Float half_b = Vector3f.DotProduct(origin, ray.Direction);
             Float c = originSquared - rSquared;
-            var isInside = c < 0;
 
             Float d = half_b * half_b - a * c;
             if (d < 0)
@@ -56,7 +55,7 @@ namespace RayTracing.Core
                 ret.HitTime = t;
                 ret.HitPoint = ray.GetPoint(t);
                 ret.Normal = (ret.HitPoint - _center) / _radius;
-                ret.IsFrontFace = !isInside;
+                ret.IsFrontFace = Vector3f.DotProduct(ret.Normal, ray.Direction) < 0;
                 if (!ret.IsFrontFace)
                     ret.Normal.Negate();
 

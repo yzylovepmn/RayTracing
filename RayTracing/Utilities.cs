@@ -74,5 +74,36 @@ namespace RayTracing
         {
             return vecIn - 2 * Vector3f.DotProduct(vecIn, normal) * normal;
         }
+
+        /// <summary>
+        /// // Use Schlick's approximation for reflectance.
+        /// </summary>
+        public static float Reflectance(float c, float refractRadio)
+        {
+            var r = (1 - refractRadio) / (1 + refractRadio);
+            r *= r;
+            return (float)(r + (1 - r) * Math.Pow(1 - c, 5));
+        }
+
+        /// <summary>
+        /// Assume all vectors is normalized
+        /// </summary>
+        public static Vector3f Refract(Vector3f vecIn, Vector3f normal, float c, float sSquared, float refractRadio)
+        {
+            var coeff1 = refractRadio;
+            var coeff2 = (float)(refractRadio * c - Math.Sqrt(1 - refractRadio * refractRadio * sSquared));
+            return vecIn * coeff1 + normal * coeff2;
+        }
+
+        /// <summary>
+        /// Assume all vectors is normalized
+        /// </summary>
+        public static Vector3f Refract(Vector3f vecIn, Vector3f normal, float refractRadio)
+        {
+            var c = Math.Min(Vector3f.DotProduct(-vecIn, normal), 1);
+            var coeff1 = refractRadio;
+            var coeff2 = (float)(refractRadio * c - Math.Sqrt(1 - refractRadio * refractRadio * (1 - c * c)));
+            return vecIn * coeff1 + normal * coeff2;
+        }
     }
 }

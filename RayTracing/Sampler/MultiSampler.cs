@@ -17,7 +17,7 @@ namespace RayTracing
 
         public override Colorf Sample(int j, int i)
         {
-            var ret = new Colorf(0f, 0f, 0f, 0f);
+            var ret = Colorf.TransparentBlack;
             for (int k = 0; k < _samplesPerPixel; k++)
             {
                 var u = (float)(i + 0.5f + Utilities.RandomDouble(-0.5, 0.5)) / _pipeline.Image.Width;

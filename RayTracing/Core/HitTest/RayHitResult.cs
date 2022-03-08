@@ -14,6 +14,8 @@ namespace RayTracing.Core
             HitPoint = hitPoint;
             Normal = normal;
             IsFrontFace = isFrontFace;
+
+            Normal.Normalize();
         }
 
         public IHittable Hittable;
