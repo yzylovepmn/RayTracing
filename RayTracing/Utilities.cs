@@ -2,16 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace RayTracing
 {
     public static class Utilities
     {
         private static Random _rand;
+        private static SpinLock _lock;
 
         static Utilities()
         {
             _rand = new Random(Environment.TickCount);
+            _lock = new SpinLock();
         }
 
         public static bool IsZero(Vector3f v)
@@ -24,25 +27,94 @@ namespace RayTracing
             return MathUtil.IsZero(v.X) && MathUtil.IsZero(v.Y) && MathUtil.IsZero(v.Z);
         }
 
+        public static float RandomFloat()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = _RandomFloat();
+            _lock.Exit();
+            return value;
+        }
+
+        private static float _RandomFloat()
+        {
+            return (float)_rand.NextDouble();
+        }
+
         public static double RandomDouble()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = _RandomDouble();
+            _lock.Exit();
+            return value;
+        }
+
+        private static double _RandomDouble()
         {
             return _rand.NextDouble();
         }
 
         public static double RandomDouble(double min, double max)
         {
+            var take = false;
+            _lock.Enter(ref take);
             var delta = max - min;
-            return _rand.NextDouble() * delta + min;
+            var value = _rand.NextDouble() * delta + min;
+            _lock.Exit();
+            return value;
         }
 
-        public static Vector3f RandomVector()
+        public static float RandomFloat(float min, float max)
         {
-            return new Vector3f((float)RandomDouble(), (float)RandomDouble(), (float)RandomDouble());
+            var take = false;
+            _lock.Enter(ref take);
+            var value = _RandomFloat(min, max);
+            _lock.Exit();
+            return value;
         }
 
-        public static Vector3f RandomVector(double min, double max)
+        private static float _RandomFloat(float min, float max)
         {
-            return new Vector3f((float)RandomDouble(min, max), (float)RandomDouble(min, max), (float)RandomDouble(min, max));
+            var delta = max - min;
+            var value = (float)_rand.NextDouble() * delta + min;
+            return value;
+        }
+
+        public static Vector3f RandomVector3()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = new Vector3f((float)_RandomDouble(), (float)_RandomDouble(), (float)_RandomDouble());
+            _lock.Exit();
+            return value;
+        }
+
+        public static Vector2f RandomVector2()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = new Vector2f((float)_RandomDouble(), (float)_RandomDouble());
+            _lock.Exit();
+            return value;
+        }
+
+        public static Colorf RandomColor()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = new Colorf(_RandomFloat(), _RandomFloat(), _RandomFloat());
+            _lock.Exit();
+            return value;
+        }
+
+        public static Colorf RandomColor(float min, float max)
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = new Colorf(_RandomFloat(min, max), _RandomFloat(min, max), _RandomFloat(min, max));
+            _lock.Exit();
+            return value;
         }
 
         public static Vector3f RandomVectorOnUnitSphere()
@@ -62,12 +134,34 @@ namespace RayTracing
 
         public static Vector3f RandomVectorInUnitSphere()
         {
-            while (true)
-            {
-                var v = RandomVector(-1, 1);
-                if (v.Length < 1)
-                    return v;
-            }
+            var take = false;
+            _lock.Enter(ref take);
+            var r1 = Math.PI * 2 * _RandomDouble();
+            var r2 = Math.PI * 2 * _RandomDouble();
+            _lock.Exit();
+            var c2 = Math.Cos(r2);
+            return new Vector3f((float)(Math.Cos(r1) * c2), (float)(Math.Sin(r1) * c2), (float)Math.Sin(r2));
+            //while (true)
+            //{
+            //    var v = RandomVector3(-1, 1);
+            //    if (v.LengthSquared < 1)
+            //        return v;
+            //}
+        }
+
+        public static Vector3f RandomVectorInUnitCicle()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var r = Math.PI * 2 * _RandomDouble();
+            _lock.Exit();
+            return new Vector3f((float)Math.Cos(r), (float)Math.Sin(r), 0);
+            //while (true)
+            //{
+            //    var v = RandomVector2(-0.8f, 0.8f);
+            //    if (v.Length < 1)
+            //        return new Vector3f(v.X, v.Y, 0);
+            //}
         }
 
         public static Vector3f Reflect(Vector3f vecIn, Vector3f normal)

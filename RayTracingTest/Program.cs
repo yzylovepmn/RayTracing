@@ -18,7 +18,7 @@ namespace RayTracingTest
         {
             pipeline = new Pipeline();
             pipeline.Init();
-            var sampler = new MultiSampler(pipeline);
+            var sampler = new MultiSampler(pipeline, 500);
             pipeline.RenderTo(sampler, TestFile);
         }
     }

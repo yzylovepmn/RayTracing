@@ -30,6 +30,7 @@ namespace RayTracing.Core
 
             for (int j = _height - 1; j >= 0; j--)
             {
+                Console.WriteLine(string.Format("Line : {0} done", j));
                 for (int i = 0; i < _width; i++)
                 {
                     var color = sampler.Sample(j, i);
@@ -65,6 +66,7 @@ namespace RayTracing.Core
 
                     colors[j, i] = color;
                 });
+                Console.WriteLine(string.Format("Line : {0} done", j));
             });
 
             var sb = new StringBuilder();

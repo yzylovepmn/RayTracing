@@ -7,9 +7,9 @@ namespace RayTracing
 {
     public class MultiSampler : Sampler
     {
-        public MultiSampler(Pipeline pipeline) : base(pipeline)
+        public MultiSampler(Pipeline pipeline, int samplesPerPixel = 100) : base(pipeline)
         {
-            _samplesPerPixel = 100;
+            _samplesPerPixel = samplesPerPixel;
         }
 
         public int SamplesPerPixel { get { return _samplesPerPixel; } }
