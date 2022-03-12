@@ -34,7 +34,7 @@ namespace RayTracing
                 dir = Utilities.Reflect(dir_norm, hitResult.Normal);
             else dir = Utilities.Refract(dir_norm, hitResult.Normal, c, sSquared, refractRadio);
 
-            scattered = new Ray3f(hitResult.HitPoint, dir);
+            scattered = new Ray3f(hitResult.HitPoint, dir, ray.Time);
             return true;
         }
     }

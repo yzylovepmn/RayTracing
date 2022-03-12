@@ -9,10 +9,11 @@ namespace RayTracing.Core
 {
     public struct Ray3f
     {
-        public Ray3f(Point3f origin, Vector3f direction)
+        public Ray3f(Point3f origin, Vector3f direction, Float time = 0)
         {
             _origin = origin;
             _direction = direction;
+            _time = time;
         }
 
         public Point3f Origin
@@ -28,6 +29,13 @@ namespace RayTracing.Core
             set { _direction = value; }
         }
         private Vector3f _direction;
+
+        public Float Time
+        {
+            get { return _time; }
+            set { _time = value; }
+        }
+        private Float _time;
 
         public Point3f GetPoint(Float time)
         {

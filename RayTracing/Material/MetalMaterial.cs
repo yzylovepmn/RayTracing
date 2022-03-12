@@ -40,7 +40,7 @@ namespace RayTracing
             var reflected = Utilities.Reflect(dir, hitResult.Normal);
             if (!MathUtil.IsZero(_fuzz))
                 reflected += _fuzz * Utilities.RandomVectorInUnitSphere();
-            scattered = new Ray3f(hitResult.HitPoint, reflected);
+            scattered = new Ray3f(hitResult.HitPoint, reflected, ray.Time);
             attenuation = _albedo;
             return Vector3f.DotProduct(reflected, hitResult.Normal) > 0;
         }

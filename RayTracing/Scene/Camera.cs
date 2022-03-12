@@ -17,6 +17,9 @@ namespace RayTracing
             _position = Point3f.Origin;
             _lookDirection = -Vector3f.ZAxis;
             _upDirection = Vector3f.YAxis;
+            _shutterTime1 = 0;
+            _shutterTime2 = 0;
+            _enableShutter = false;
 
             Update();
         }
@@ -83,6 +86,27 @@ namespace RayTracing
         }
         private Vector3f _upDirection;
 
+        public float ShutterTime1
+        {
+            get { return _shutterTime1; }
+            set { _shutterTime1 = Math.Min(value, _shutterTime2); }
+        }
+        private float _shutterTime1;
+
+        public float ShutterTime2
+        {
+            get { return _shutterTime2; }
+            set { _shutterTime2 = Math.Max(value, _shutterTime1); }
+        }
+        private float _shutterTime2;
+
+        public bool EnableShutter
+        {
+            get { return _enableShutter; }
+            set { _enableShutter = value; }
+        }
+        private bool _enableShutter;
+
         private Vector3f _horizontal;
         private Vector3f _vertical;
         private Vector3f _x;
@@ -111,7 +135,8 @@ namespace RayTracing
             var rd = _aperture * Utilities.RandomVectorInUnitCicle() / 2;
             var offset = _x * rd.X + _y * rd.Y;
             var position = _position + offset;
-            return new Ray3f(position, _lowerLeftCorner + u * _horizontal + v * _vertical - position);
+            var time = _enableShutter ? Utilities.RandomFloat(_shutterTime1, _shutterTime2) : 0f;
+            return new Ray3f(position, _lowerLeftCorner + u * _horizontal + v * _vertical - position, time);
         }
     }
 }

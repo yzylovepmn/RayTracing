@@ -29,7 +29,7 @@ namespace RayTracing
             var scatteredDir = hitResult.Normal + Utilities.RandomVectorOnUnitSphere();
             if (Utilities.IsZero(scatteredDir))
                 scatteredDir = hitResult.Normal;
-            scattered = new Ray3f(hitResult.HitPoint, scatteredDir);
+            scattered = new Ray3f(hitResult.HitPoint, scatteredDir, ray.Time);
             attenuation = _albedo;
             return true;
         }
