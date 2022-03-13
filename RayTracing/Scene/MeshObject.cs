@@ -32,15 +32,20 @@ namespace RayTracing
         }
         private Material _material;
 
-        public bool HitWithRay(Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
+        public bool HitWithRay(ref Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
         {
             ret = new RayHitResult();
             if (_mesh == null)
                 return false;
-            var success = _mesh.HitWithRay(ray, out ret, minT, maxT);
+            var success = _mesh.HitWithRay(ref ray, out ret, minT, maxT);
             // override
             ret.Hittable = this;
             return success;
+        }
+
+        public bool GetBoundingBox(out AxisAlignedBox3f boundingBox)
+        {
+            return _mesh.GetBoundingBox(out boundingBox);
         }
     }
 }

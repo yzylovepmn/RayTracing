@@ -27,6 +27,13 @@ namespace RayTracing
             return MathUtil.IsZero(v.X) && MathUtil.IsZero(v.Y) && MathUtil.IsZero(v.Z);
         }
 
+        public static void Swap(ref float a, ref float b)
+        {
+            var t = a;
+            a = b;
+            b = t;
+        }
+
         public static float RandomFloat()
         {
             var take = false;

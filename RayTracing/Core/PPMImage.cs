@@ -22,6 +22,8 @@ namespace RayTracing.Core
 
         public void RenderTo(ISampler sampler, string fileName)
         {
+            var tick = Environment.TickCount;
+
             var sb = new StringBuilder();
 
             sb.AppendLine("P3");
@@ -48,10 +50,14 @@ namespace RayTracing.Core
             }
 
             File.WriteAllText(fileName, sb.ToString());
+
+            Console.WriteLine(string.Format("Total execution time : {0}s", (Environment.TickCount - tick) / 1000f));
         }
 
         public void RenderToParallel(ISampler sampler, string fileName)
         {
+            var tick = Environment.TickCount;
+
             Colorf[,] colors = new Colorf[_height, _width];
             Parallel.For(0, _height, (k) =>
             {
@@ -87,6 +93,8 @@ namespace RayTracing.Core
             }
 
             File.WriteAllText(fileName, sb.ToString());
+
+            Console.WriteLine(string.Format("Total execution time : {0}s", (Environment.TickCount - tick) / 1000f));
         }
     }
 }

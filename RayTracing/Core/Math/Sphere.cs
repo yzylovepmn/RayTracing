@@ -13,21 +13,50 @@ namespace RayTracing.Core
         {
             _radius = radius;
             _center = Point3f.Origin;
+            _bounds = AxisAlignedBox3f.Empty;
+            _needUpdateBounds = true;
         }
 
         public Sphere(Float radius, Point3f center)
         {
             _radius = radius;
             _center = center;
+            _bounds = AxisAlignedBox3f.Empty;
+            _needUpdateBounds = true;
         }
 
-        public Float Radius { get { return _radius; } set { _radius = value; } }
+        public Float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                if (_radius != value)
+                {
+                    _radius = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
         private Float _radius;
 
-        public Point3f Center { get { return _center; } set { _center = value; } }
+        public Point3f Center
+        {
+            get { return _center; }
+            set
+            {
+                if (_center != value)
+                {
+                    _center = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
         private Point3f _center;
 
-        public bool HitWithRay(Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
+        private AxisAlignedBox3f _bounds;
+        private bool _needUpdateBounds;
+
+        public bool HitWithRay(ref Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
         {
             ret = new RayHitResult();
             var origin = ray.Origin - _center;
@@ -61,6 +90,21 @@ namespace RayTracing.Core
 
                 return true;
             }
+        }
+
+        public bool GetBoundingBox(out AxisAlignedBox3f boundingBox)
+        {
+            if (_needUpdateBounds)
+                _UpdateBounds();
+            boundingBox = _bounds;
+            return true;
+        }
+
+        private void _UpdateBounds()
+        {
+            var vec = new Vector3f(_radius, _radius, _radius);
+            _bounds = new AxisAlignedBox3f(_center - vec, _center + vec);
+            _needUpdateBounds = false;
         }
     }
 }

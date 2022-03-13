@@ -26,7 +26,7 @@ namespace RayTracing
                 return Colorf.Black;
 
             RayHitResult ret;
-            if (_pipeline.Scene.HittableList.HitWithRay(ray, out ret, 1e-3f))
+            if (_pipeline.Scene.HitWithRay(ref ray, out ret, 1e-3f))
             {
                 var meshObject = ret.Hittable as MeshObject;
                 Colorf attenuation;

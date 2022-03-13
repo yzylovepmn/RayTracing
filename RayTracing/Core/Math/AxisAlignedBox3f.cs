@@ -47,6 +47,12 @@ namespace RayTracing.Core
             _max = new Vector3f(Math.Max(min.X, max.X), Math.Max(min.Y, max.Y), Math.Max(min.Z, max.Z));
         }
 
+        public AxisAlignedBox3f(Point3f min, Point3f max)
+        {
+            _min = new Vector3f(Math.Min(min.X, max.X), Math.Min(min.Y, max.Y), Math.Min(min.Z, max.Z));
+            _max = new Vector3f(Math.Max(min.X, max.X), Math.Max(min.Y, max.Y), Math.Max(min.Z, max.Z));
+        }
+
         public AxisAlignedBox3f(Point3f center, Float halfSize)
         {
             halfSize = Math.Abs(halfSize);
@@ -133,9 +139,9 @@ namespace RayTracing.Core
             _min.X = Math.Min(v.X, _min.X);
             _min.Y = Math.Min(v.Y, _min.Y);
             _min.Z = Math.Min(v.Z, _min.Z);
-            _max.X = Math.Min(v.X, _max.X);
-            _max.Y = Math.Min(v.Y, _max.Y);
-            _max.Z = Math.Min(v.Z, _max.Z);
+            _max.X = Math.Max(v.X, _max.X);
+            _max.Y = Math.Max(v.Y, _max.Y);
+            _max.Z = Math.Max(v.Z, _max.Z);
         }
 
         public void Union(AxisAlignedBox3f box)
@@ -151,9 +157,9 @@ namespace RayTracing.Core
                 _min.X = Math.Min(box._min.X, _min.X);
                 _min.Y = Math.Min(box._min.Y, _min.Y);
                 _min.Z = Math.Min(box._min.Z, _min.Z);
-                _max.X = Math.Min(box._max.X, _max.X);
-                _max.Y = Math.Min(box._max.Y, _max.Y);
-                _max.Z = Math.Min(box._max.Z, _max.Z);
+                _max.X = Math.Max(box._max.X, _max.X);
+                _max.Y = Math.Max(box._max.Y, _max.Y);
+                _max.Z = Math.Max(box._max.Z, _max.Z);
             }
         }
 
@@ -220,6 +226,23 @@ namespace RayTracing.Core
             Float y = (p.Y < _min.Y) ? _min.Y : (p.Y > _max.Y ? _max.Y : p.Y);
             Float z = (p.Z < _min.Z) ? _min.Z : (p.Z > _max.Z ? _max.Z : p.Z);
             return new Point3f(x, y, z);
+        }
+
+        public bool HitWithRay(ref Ray3f ray, Float tMin, Float tMax)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var invR = 1 / ray.Direction[i];
+                var t1 = (_min[i] - ray.Origin[i]) * invR;
+                var t2 = (_max[i] - ray.Origin[i]) * invR;
+                if (invR < 0)
+                    Utilities.Swap(ref t1, ref t2);
+                tMin = t1 > tMin ? t1 : tMin;
+                tMax = t2 < tMax ? t2 : tMax;
+                if (tMax <= tMin)
+                    return false;
+            }
+            return true;
         }
 
         public void ScaleAt(Vector3f scale, Point3f scaleCenter)

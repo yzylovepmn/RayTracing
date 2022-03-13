@@ -17,10 +17,76 @@ namespace RayTracing.Core
             _radius = radius;
         }
 
-        public Float Radius { get { return _radius; } set { _radius = value; } }
+        public Float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                if (_radius != value)
+                {
+                    _radius = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
         private Float _radius;
 
-        public bool HitWithRay(Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
+        public override Point3f Position
+        {
+            get { return base.Position; }
+            set
+            {
+                if (base.Position != value)
+                {
+                    base.Position = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
+
+        public override Point3f Target
+        {
+            get { return base.Target; }
+            set
+            {
+                if (base.Target != value)
+                {
+                    base.Target = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
+
+        public override Float Time1
+        {
+            get { return base.Time1; }
+            set
+            {
+                if (base.Time1 != value)
+                {
+                    base.Time1 = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
+
+        public override Float Time2
+        {
+            get { return base.Time2; }
+            set
+            {
+                if (base.Time2 != value)
+                {
+                    base.Time2 = value;
+                    _needUpdateBounds = true;
+                }
+            }
+        }
+
+        private AxisAlignedBox3f _bounds;
+        private bool _needUpdateBounds = true;
+
+        public bool HitWithRay(ref Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
         {
             var center = GetPosition(ray.Time);
             ret = new RayHitResult();
@@ -55,6 +121,24 @@ namespace RayTracing.Core
 
                 return true;
             }
+        }
+
+        public bool GetBoundingBox(out AxisAlignedBox3f boundingBox)
+        {
+            if (_needUpdateBounds)
+                _UpdateBounds();
+            boundingBox = _bounds;
+            return true;
+        }
+
+        private void _UpdateBounds()
+        {
+            var c1 = GetPosition(_time1);
+            var c2 = GetPosition(_time2);
+            var vec = new Vector3f(_radius, _radius, _radius);
+            var box1 = new AxisAlignedBox3f(c1 - vec, c1 + vec);
+            _bounds = new AxisAlignedBox3f(c2 - vec, c2 + vec);
+            _bounds.Union(box1);
         }
     }
 }

@@ -133,9 +133,9 @@ namespace RayTracing.Core
             _min.X = Math.Min(v.X, _min.X);
             _min.Y = Math.Min(v.Y, _min.Y);
             _min.Z = Math.Min(v.Z, _min.Z);
-            _max.X = Math.Min(v.X, _max.X);
-            _max.Y = Math.Min(v.Y, _max.Y);
-            _max.Z = Math.Min(v.Z, _max.Z);
+            _max.X = Math.Max(v.X, _max.X);
+            _max.Y = Math.Max(v.Y, _max.Y);
+            _max.Z = Math.Max(v.Z, _max.Z);
         }
 
         public void Union(AxisAlignedBox3d box)
@@ -151,9 +151,9 @@ namespace RayTracing.Core
                 _min.X = Math.Min(box._min.X, _min.X);
                 _min.Y = Math.Min(box._min.Y, _min.Y);
                 _min.Z = Math.Min(box._min.Z, _min.Z);
-                _max.X = Math.Min(box._max.X, _max.X);
-                _max.Y = Math.Min(box._max.Y, _max.Y);
-                _max.Z = Math.Min(box._max.Z, _max.Z);
+                _max.X = Math.Max(box._max.X, _max.X);
+                _max.Y = Math.Max(box._max.Y, _max.Y);
+                _max.Z = Math.Max(box._max.Z, _max.Z);
             }
         }
 

@@ -138,7 +138,7 @@ namespace RayTracing.Core
             return v - f * Normal;
         }
 
-        public bool HitWithRay(Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
+        public bool HitWithRay(ref Ray3f ray, out RayHitResult ret, float minT = 0, float maxT = float.MaxValue)
         {
             ret = new RayHitResult();
             var norm = Vector3f.DotProduct(ray.Direction, Normal);
@@ -158,6 +158,12 @@ namespace RayTracing.Core
 
                 return true;
             }
+        }
+
+        public bool GetBoundingBox(out AxisAlignedBox3f boundingBox)
+        {
+            boundingBox = new AxisAlignedBox3f();
+            return false;
         }
     }
 }

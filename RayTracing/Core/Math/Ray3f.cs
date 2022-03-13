@@ -44,7 +44,7 @@ namespace RayTracing.Core
 
         public bool IntersectWith(IHittable hittable, out RayHitResult ret, Float minT = 0, Float maxT = Float.MaxValue)
         {
-            return hittable.HitWithRay(this, out ret, minT, maxT);
+            return hittable.HitWithRay(ref this, out ret, minT, maxT);
         }
     }
 }

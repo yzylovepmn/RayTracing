@@ -19,28 +19,28 @@ namespace RayTracing.Core
             _target = target;
         }
 
-        public float Time1
+        public virtual float Time1
         {
             get { return _time1; }
             set { _time1 = Math.Min(value, _time2); }
         }
         protected float _time1;
 
-        public float Time2
+        public virtual float Time2
         {
             get { return _time2; }
             set { _time2 = Math.Max(value, _time1); }
         }
         protected float _time2;
 
-        public Point3f Position
+        public virtual Point3f Position
         {
             get { return _position; }
             set { _position = value; }
         }
         private Point3f _position;
 
-        public Point3f Target
+        public virtual Point3f Target
         {
             get { return _target; }
             set { _target = value; }

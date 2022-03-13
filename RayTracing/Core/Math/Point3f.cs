@@ -19,6 +19,26 @@ namespace RayTracing.Core
             _z = z;
         }
 
+        /// <summary>
+        /// Get component of vector without range check
+        /// </summary>
+        public Float this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+                    case 0:
+                        return _x;
+                    case 1:
+                        return _y;
+                    case 2:
+                        return _z;
+                }
+                throw new IndexOutOfRangeException();
+            }
+        }
+
         public bool IsNaN { get { return Float.IsNaN(_x) || Float.IsNaN(_y) || Float.IsNaN(_z); } }
 
         public void Offset(Float offsetX, Float offsetY, Float offsetZ)
