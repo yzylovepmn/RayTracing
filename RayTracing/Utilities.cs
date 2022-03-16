@@ -1,6 +1,9 @@
 ﻿using RayTracing.Core;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -27,11 +30,20 @@ namespace RayTracing
             return MathUtil.IsZero(v.X) && MathUtil.IsZero(v.Y) && MathUtil.IsZero(v.Z);
         }
 
-        public static void Swap(ref float a, ref float b)
+        public static void Swap<T>(ref T a, ref T b) where T : struct
         {
             var t = a;
             a = b;
             b = t;
+        }
+
+        public static int RandomInt(int min, int max)
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = _rand.Next(min, max);
+            _lock.Exit();
+            return value;
         }
 
         public static float RandomFloat()
@@ -60,6 +72,12 @@ namespace RayTracing
         private static double _RandomDouble()
         {
             return _rand.NextDouble();
+        }
+
+        private static double _RandomDouble(double min, double max)
+        {
+            var span = max - min;
+            return min + span * _rand.NextDouble();
         }
 
         public static double RandomDouble(double min, double max)
@@ -97,6 +115,15 @@ namespace RayTracing
             return value;
         }
 
+        public static Vector3f RandomVector3(float min, float max)
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var value = new Vector3f((float)_RandomDouble(min, max), (float)_RandomDouble(min, max), (float)_RandomDouble(min, max));
+            _lock.Exit();
+            return value;
+        }
+
         public static Vector2f RandomVector2()
         {
             var take = false;
@@ -126,21 +153,6 @@ namespace RayTracing
 
         public static Vector3f RandomVectorOnUnitSphere()
         {
-            var vec = RandomVectorInUnitSphere();
-            vec.Normalize();
-            return vec;
-        }
-
-        public static Vector3f RandomVectorInHemiSphere(Vector3f normal)
-        {
-            var vec = RandomVectorInUnitSphere();
-            if (Vector3f.DotProduct(normal, vec) < 0)
-                vec.Negate();
-            return vec;
-        }
-
-        public static Vector3f RandomVectorInUnitSphere()
-        {
             var take = false;
             _lock.Enter(ref take);
             var r1 = Math.PI * 2 * _RandomDouble();
@@ -148,12 +160,27 @@ namespace RayTracing
             _lock.Exit();
             var c2 = Math.Cos(r2);
             return new Vector3f((float)(Math.Cos(r1) * c2), (float)(Math.Sin(r1) * c2), (float)Math.Sin(r2));
-            //while (true)
-            //{
-            //    var v = RandomVector3(-1, 1);
-            //    if (v.LengthSquared < 1)
-            //        return v;
-            //}
+            //var vec = RandomVectorInUnitSphere();
+            //vec.Normalize();
+            //return vec;
+        }
+
+        public static Vector3f RandomVectorInHemiSphere(Vector3f normal)
+        {
+            var vec = RandomVector3(-1, 1);
+            if (Vector3f.DotProduct(normal, vec) < 0)
+                vec.Negate();
+            return vec;
+        }
+
+        public static Vector3f RandomVectorInUnitSphere()
+        {
+            while (true)
+            {
+                var v = RandomVector3(-1, 1);
+                if (v.LengthSquared < 1)
+                    return v;
+            }
         }
 
         public static Vector3f RandomVectorInUnitCicle()
@@ -165,7 +192,7 @@ namespace RayTracing
             return new Vector3f((float)Math.Cos(r), (float)Math.Sin(r), 0);
             //while (true)
             //{
-            //    var v = RandomVector2(-0.8f, 0.8f);
+            //    var v = RandomVector2(-1f, 1f);
             //    if (v.Length < 1)
             //        return new Vector3f(v.X, v.Y, 0);
             //}
@@ -205,6 +232,34 @@ namespace RayTracing
             var coeff1 = refractRadio;
             var coeff2 = (float)(refractRadio * c - Math.Sqrt(1 - refractRadio * refractRadio * (1 - c * c)));
             return vecIn * coeff1 + normal * coeff2;
+        }
+
+        /// <param name="p">p on sphere</param>
+        public static void ComputeUVOfSphere(Point3f p, out float u, out float v)
+        {
+            var theta = Math.Acos(-p.Y);
+            var phi = Math.Atan2(-p.Z, p.X) + Math.PI;
+            u = (float)(phi / (Math.PI * 2));
+            v = (float)(theta / Math.PI);
+        }
+
+        public static float SmoothStep(float t)
+        {
+            return t * t * (3 - 2 * t);
+        }
+
+        public static Colorf ToColorf(Color color)
+        {
+            return new Colorf(color.R, color.G, color.B);
+        }
+
+        public static Stream OpenStream(string name)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var stream = assembly.GetManifestResourceStream(name);
+            if (stream == null)
+                throw new FileNotFoundException("The resource file '" + name + "' was not found!");
+            return stream;
         }
     }
 }

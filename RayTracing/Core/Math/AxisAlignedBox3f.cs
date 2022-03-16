@@ -129,9 +129,9 @@ namespace RayTracing.Core
             _min.X = Math.Min(p.X, _min.X);
             _min.Y = Math.Min(p.Y, _min.Y);
             _min.Z = Math.Min(p.Z, _min.Z);
-            _max.X = Math.Min(p.X, _max.X);
-            _max.Y = Math.Min(p.Y, _max.Y);
-            _max.Z = Math.Min(p.Z, _max.Z);
+            _max.X = Math.Max(p.X, _max.X);
+            _max.Y = Math.Max(p.Y, _max.Y);
+            _max.Z = Math.Max(p.Z, _max.Z);
         }
 
         public void Union(Vector3f v)

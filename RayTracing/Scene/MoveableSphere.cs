@@ -118,6 +118,7 @@ namespace RayTracing.Core
                 ret.IsFrontFace = Vector3f.DotProduct(ret.Normal, ray.Direction) < 0;
                 if (!ret.IsFrontFace)
                     ret.Normal.Negate();
+                Utilities.ComputeUVOfSphere((Point3f)ret.Normal, out ret.U, out ret.V);
 
                 return true;
             }

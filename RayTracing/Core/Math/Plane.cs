@@ -155,6 +155,8 @@ namespace RayTracing.Core
                 ret.HitPoint = ray.GetPoint(time);
                 ret.IsFrontFace = norm < 0;
                 ret.Normal = ret.IsFrontFace ? Normal : -Normal;
+                ret.U = 0;
+                ret.V = 0;
 
                 return true;
             }

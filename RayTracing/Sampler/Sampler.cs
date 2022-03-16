@@ -17,10 +17,10 @@ namespace RayTracing
             var v = (float)(j + 0.5f) / _pipeline.Image.Height;
             var ray = _pipeline.Scene.Camera.GetRay(u, v);
 
-            return RayColor(ray, _pipeline.MaxRayDepth);
+            return RayColor(ray, _pipeline.Background, _pipeline.MaxRayDepth);
         }
 
-        protected virtual Colorf RayColor(Ray3f ray, int depth)
+        protected virtual Colorf RayColor(Ray3f ray, Colorf background, int depth)
         {
             if (depth <= 0)
                 return Colorf.Black;
@@ -29,17 +29,15 @@ namespace RayTracing
             if (_pipeline.Scene.HitWithRay(ref ray, out ret, 1e-3f))
             {
                 var meshObject = ret.Hittable as MeshObject;
-                Colorf attenuation;
                 Ray3f scattered;
+                Colorf attenuation;
+                Colorf emitted = meshObject.Material.Emitted(ret.U, ret.V, ret.HitPoint);
                 if (meshObject.Material.Scatter(ray, ret, out attenuation, out scattered))
-                    return attenuation * RayColor(scattered, depth - 1);
-                return Colorf.Black;
+                    return emitted + attenuation * RayColor(scattered, background, depth - 1);
+                return emitted;
             }
 
-            var dir_norm = ray.Direction;
-            dir_norm.Normalize();
-            var t = 0.5f * (dir_norm.Y + 1);
-            return (1 - t) * Colorf.White + t * new Colorf(0.5f, 0.7f, 1);
+            return background;
         }
     }
 }

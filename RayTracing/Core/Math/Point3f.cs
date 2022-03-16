@@ -109,6 +109,20 @@ namespace RayTracing.Core
             return matrix.Transform(point);
         }
 
+        public static Point3f operator *(Point3f p, Float scalar)
+        {
+            return new Point3f(p._x * scalar,
+                                p._y * scalar,
+                                p._z * scalar);
+        }
+
+        public static Point3f operator *(Float scalar, Point3f p)
+        {
+            return new Point3f(p._x * scalar,
+                                p._y * scalar,
+                                p._z * scalar);
+        }
+
         public static Point3f Multiply(Point3f point, Matrix3f matrix)
         {
             return matrix.Transform(point);

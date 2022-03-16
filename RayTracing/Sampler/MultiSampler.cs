@@ -23,7 +23,7 @@ namespace RayTracing
                 var u = (float)(i + 0.5f + Utilities.RandomDouble(-0.5, 0.5)) / _pipeline.Image.Width;
                 var v = (float)(j + 0.5f + Utilities.RandomDouble(-0.5, 0.5)) / _pipeline.Image.Height;
                 var ray = _pipeline.Scene.Camera.GetRay(u, v);
-                ret += RayColor(ray, _pipeline.MaxRayDepth);
+                ret += RayColor(ray, _pipeline.Background, _pipeline.MaxRayDepth);
             }
             ret *= 1f / _samplesPerPixel;
             return ret;

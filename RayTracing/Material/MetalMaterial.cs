@@ -10,7 +10,7 @@ namespace RayTracing
         public MetalMaterial()
         {
             _albedo = Colorf.White;
-            _fuzz = 1;
+            _fuzz = 0;
         }
 
         public MetalMaterial(Colorf albedo, float fuzz = 0)

@@ -7,22 +7,21 @@ namespace RayTracing
 {
     public class LambertianMaterial : Material
     {
-        public LambertianMaterial()
+        public LambertianMaterial(Colorf albedo) : this(new SolidColorTexture(albedo))
         {
-
         }
 
-        public LambertianMaterial(Colorf albedo)
+        public LambertianMaterial(Texture albedo)
         {
             _albedo = albedo;
         }
 
-        public Colorf Albedo
+        public Texture Albedo
         {
             get { return _albedo; }
             set { _albedo = value; }
         }
-        private Colorf _albedo;
+        private Texture _albedo;
 
         public override bool Scatter(Ray3f ray, RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered)
         {
@@ -30,7 +29,7 @@ namespace RayTracing
             if (Utilities.IsZero(scatteredDir))
                 scatteredDir = hitResult.Normal;
             scattered = new Ray3f(hitResult.HitPoint, scatteredDir, ray.Time);
-            attenuation = _albedo;
+            attenuation = _albedo.Sample(hitResult.U, hitResult.V, hitResult.HitPoint);
             return true;
         }
     }
