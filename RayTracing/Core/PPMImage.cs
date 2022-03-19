@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RayTracing.Core
@@ -35,15 +36,22 @@ namespace RayTracing.Core
                 Console.WriteLine(string.Format("Line : {0} done", j));
                 for (int i = 0; i < _width; i++)
                 {
-                    var color = sampler.Sample(j, i);
+                    try
+                    {
+                        var color = sampler.Sample(j, i);
 
-                    // gamma correction (gamma = 2)
-                    color.R = (float)Math.Sqrt(color.R);
-                    color.G = (float)Math.Sqrt(color.G);
-                    color.B = (float)Math.Sqrt(color.B);
-                    var cb = color.ToBytes();
+                        // gamma correction (gamma = 2)
+                        color.R = (float)Math.Sqrt(color.R);
+                        color.G = (float)Math.Sqrt(color.G);
+                        color.B = (float)Math.Sqrt(color.B);
+                        var cb = color.ToBytes();
 
-                    sb.Append(string.Format("{0}{1} {2} {3}", i == 0 ? "" : " ", cb.R, cb.G, cb.B));
+                        sb.Append(string.Format("{0}{1} {2} {3}", i == 0 ? "" : " ", cb.R, cb.G, cb.B));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(string.Format("Exception occur\r\nStacktrace : {0}\r\nMessage : {1}", e.StackTrace, e.Message));
+                    }
                 }
                 if (j > 0)
                     sb.AppendLine();
@@ -57,22 +65,31 @@ namespace RayTracing.Core
         public void RenderToParallel(ISampler sampler, string fileName)
         {
             var tick = Environment.TickCount;
-
+            var count = 0;
             Colorf[,] colors = new Colorf[_height, _width];
             Parallel.For(0, _height, (k) =>
             {
                 var j = _height - 1 - k;
-                Parallel.For(0, _width, (i) =>
+                try
                 {
-                    var color = sampler.Sample(j, i);
-                    // gamma correction
-                    color.R = (float)Math.Sqrt(color.R);
-                    color.G = (float)Math.Sqrt(color.G);
-                    color.B = (float)Math.Sqrt(color.B);
+                    Parallel.For(0, _width, (i) =>
+                    {
+                        var color = sampler.Sample(j, i);
 
-                    colors[j, i] = color;
-                });
-                Console.WriteLine(string.Format("Line : {0} done", j));
+                        // gamma correction
+                        color.R = (float)Math.Sqrt(color.R);
+                        color.G = (float)Math.Sqrt(color.G);
+                        color.B = (float)Math.Sqrt(color.B);
+
+                        colors[j, i] = color;
+                    });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(string.Format("Exception occur\r\nStacktrace : {0}\r\nMessage : {1}", e.StackTrace, e.Message));
+                }
+                Interlocked.Increment(ref count);
+                Console.WriteLine(string.Format("Line : {0} done - Total done {1}", j, count));
             });
 
             var sb = new StringBuilder();

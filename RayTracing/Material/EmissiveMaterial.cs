@@ -5,13 +5,13 @@ using System.Text;
 
 namespace RayTracing
 {
-    public class DiffuseMaterial : Material
+    public class EmissiveMaterial : Material
     {
-        public DiffuseMaterial(Colorf emissive) : this(new SolidColorTexture(emissive))
+        public EmissiveMaterial(Colorf emissive) : this(new SolidColorTexture(emissive))
         {
         }
 
-        public DiffuseMaterial(Texture emissive)
+        public EmissiveMaterial(Texture emissive)
         {
             _emissive = emissive;
         }

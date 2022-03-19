@@ -7,14 +7,10 @@ namespace RayTracing
 {
     public class BVHNode : IHittable
     {
-        public BVHNode(BVHScene scene, BVHNode parent = null)
+        public BVHNode(BVHNode parent = null)
         {
-            _scene = scene;
             _parent = parent;
         }
-
-        public BVHScene Scene { get { return _scene; } }
-        private BVHScene _scene;
 
         public BVHNode Parent { get { return _parent; } }
         private BVHNode _parent;
@@ -27,7 +23,7 @@ namespace RayTracing
 
         private HittableList _hittableList;
 
-        public bool IsRoot { get { return _scene.Root == this; } }
+        public bool IsRoot { get { return _parent == null; } }
 
         private AxisAlignedBox3f _bounds;
 
@@ -77,12 +73,12 @@ namespace RayTracing
                     _hittableList = new HittableList(listRemains);
                 if (leftList.Count > 0)
                 {
-                    _left = new BVHNode(_scene, this);
+                    _left = new BVHNode(this);
                     _left.Build(leftList, depth - 1);
                 }
                 if (rightList.Count > 0)
                 {
-                    _right = new BVHNode(_scene, this);
+                    _right = new BVHNode(this);
                     _right.Build(rightList, depth - 1);
                 }
             }

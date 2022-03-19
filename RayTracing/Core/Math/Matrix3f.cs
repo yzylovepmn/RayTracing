@@ -323,9 +323,9 @@ namespace RayTracing.Core
         {
             if (box.IsInfinite) return box;
             var center = box.Center;
-            var sizeX = box.SizeX;
-            var sizeY = box.SizeY;
-            var sizeZ = box.SizeZ;
+            var sizeX = box.SizeX / 2;
+            var sizeY = box.SizeY / 2;
+            var sizeZ = box.SizeZ / 2;
             center *= this;
             var halfSize = new Vector3f(sizeX * Math.Abs(M11) + sizeY * Math.Abs(M21) + sizeZ * Math.Abs(M31),
                                         sizeX * Math.Abs(M12) + sizeY * Math.Abs(M22) + sizeZ * Math.Abs(M32),

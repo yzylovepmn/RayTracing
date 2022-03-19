@@ -7,11 +7,6 @@ namespace RayTracing.Core
 {
     public class MoveableSphere : Moveable, IHittable
     {
-        public MoveableSphere()
-        {
-
-        }
-
         public MoveableSphere(float time1, float time2, Point3f center1, Point3f center2, Float radius) : base(time1, time2, center1, center2)
         {
             _radius = radius;

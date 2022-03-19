@@ -10,7 +10,7 @@ namespace RayTracing
         public BVHScene(int maxDepth = 8)
         {
             _maxDepth = maxDepth;
-            _root = new BVHNode(this);
+            _root = new BVHNode(null);
             _hittableList.ListChanged += _hittableListChanged;
         }
 

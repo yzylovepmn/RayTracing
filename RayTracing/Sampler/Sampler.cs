@@ -28,7 +28,7 @@ namespace RayTracing
             RayHitResult ret;
             if (_pipeline.Scene.HitWithRay(ref ray, out ret, 1e-3f))
             {
-                var meshObject = ret.Hittable as MeshObject;
+                var meshObject = ret.Hittable as SceneObject;
                 Ray3f scattered;
                 Colorf attenuation;
                 Colorf emitted = meshObject.Material.Emitted(ret.U, ret.V, ret.HitPoint);
