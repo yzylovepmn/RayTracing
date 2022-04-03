@@ -258,15 +258,15 @@ namespace RayTracing.Core
             if (hasScale)
             {
                 var scale = ExtractScale(mat);
-                mat.M11 *= scale.X;
-                mat.M12 *= scale.X;
-                mat.M13 *= scale.X;
-                mat.M21 *= scale.Y;
-                mat.M22 *= scale.Y;
-                mat.M23 *= scale.Y;
-                mat.M31 *= scale.Z;
-                mat.M32 *= scale.Z;
-                mat.M33 *= scale.Z;
+                mat.M11 /= scale.X;
+                mat.M12 /= scale.X;
+                mat.M13 /= scale.X;
+                mat.M21 /= scale.Y;
+                mat.M22 /= scale.Y;
+                mat.M23 /= scale.Y;
+                mat.M31 /= scale.Z;
+                mat.M32 /= scale.Z;
+                mat.M33 /= scale.Z;
             }
 
             double w = 0, x = 0, y = 0, z = 0;

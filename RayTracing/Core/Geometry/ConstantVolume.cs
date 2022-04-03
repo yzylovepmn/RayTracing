@@ -49,7 +49,7 @@ namespace RayTracing.Core
 
             ret.HitTime = ret1.HitTime + hitDistance / rayLength;
             ret.HitPoint = ray.GetPoint(ret.HitTime);
-            ret.Normal = Utilities.RandomVectorOnUnitSphere();
+            ret.Normal = Utilities.UniformSampleOnSphere();
             ret.IsFrontFace = Utilities.RandomFloat() > 0.5f;
             ret.Hittable = this;
 

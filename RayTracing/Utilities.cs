@@ -151,51 +151,122 @@ namespace RayTracing
             return value;
         }
 
-        public static Vector3f RandomVectorOnUnitSphere()
+        public static Vector3f UniformSampleInSphere()
         {
             var take = false;
             _lock.Enter(ref take);
-            var r1 = Math.PI * 2 * _RandomDouble();
-            var r2 = Math.PI * 2 * _RandomDouble();
+            var u1 = _RandomDouble();
+            var u2 = _RandomDouble();
+            var u3 = _RandomDouble();
             _lock.Exit();
-            var c2 = Math.Cos(r2);
-            return new Vector3f((float)(Math.Cos(r1) * c2), (float)(Math.Sin(r1) * c2), (float)Math.Sin(r2));
-            //var vec = RandomVectorInUnitSphere();
-            //vec.Normalize();
-            //return vec;
+            var ratio = Math.Pow(u3, MathUtil.OneThird);
+            var z = 1 - 2 * u1;
+            var r = Math.Sqrt(1 - z * z);
+            var theta = MathUtil.TwoPIF * u2;
+            return new Vector3f((float)(r * Math.Cos(theta) * ratio), (float)(r * Math.Sin(theta) * ratio), (float)(z * ratio));
         }
 
-        public static Vector3f RandomVectorInHemiSphere(Vector3f normal)
+        public static Vector3f UniformSampleOnSphere()
         {
-            var vec = RandomVector3(-1, 1);
-            if (Vector3f.DotProduct(normal, vec) < 0)
-                vec.Negate();
-            return vec;
+            var take = false;
+            _lock.Enter(ref take);
+            var u1 = _RandomDouble();
+            var u2 = _RandomDouble();
+            _lock.Exit();
+            var z = 1 - 2 * u1;
+            var r = Math.Sqrt(1 - z * z);
+            var theta = MathUtil.TwoPIF * u2;
+            return new Vector3f((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta)), (float)z);
         }
 
-        public static Vector3f RandomVectorInUnitSphere()
+        public static float UniformOnSpherePdf()
         {
-            while (true)
+            return MathUtil.Inv4PIF;
+        }
+
+        public static float UniformInSpherePdf()
+        {
+            return MathUtil.ThreeOverFourPIF;
+        }
+
+        public static Vector3f UniformSampleOnHemisphere(ref Vector3f normal)
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var u1 = _RandomDouble();
+            var u2 = _RandomDouble();
+            _lock.Exit();
+            var z = u1;
+            var r = Math.Sqrt(1 - z * z);
+            var theta = MathUtil.TwoPIF * u2;
+            var ret = new Vector3f((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta)), (float)z);
+            var q = MatrixUtil.RotationBetween(Vector3f.ZAxis, normal);
+            ret *= q;
+            //var obn = new OBNAxis(normal);
+            //ret = obn.GetWorldPosition(ret);
+            return ret;
+        }
+
+        public static Vector3f CosineSampleOnHemisphere(ref Vector3f normal)
+        {
+            var d = ConcentricSampleInDisk();
+            var z = (float)Math.Sqrt(1 - d.X * d.X - d.Y * d.Y);
+            var ret = new Vector3f(d.X, d.Y, z);
+            var q = MatrixUtil.RotationBetween(Vector3f.ZAxis, normal);
+            ret *= q;
+            //var obn = new OBNAxis(normal);
+            //ret = obn.GetWorldPosition(ret);
+            return ret;
+        }
+
+        public static float UniformOnHemispherePdf()
+        {
+            return MathUtil.Inv2PIF;
+        }
+
+        public static float CosineOnHemispherePdf(float cosTheta)
+        {
+            return cosTheta * MathUtil.InvPIF;
+        }
+
+        public static Vector3f UniformSampleInDisk()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var u1 = _RandomDouble();
+            var u2 = _RandomDouble();
+            _lock.Exit();
+            var r = Math.Sqrt(u1);
+            var theta = MathUtil.TwoPIF * u2;
+            return new Vector3f((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta)), 0);
+        }
+
+        public static Vector3f ConcentricSampleInDisk()
+        {
+            var take = false;
+            _lock.Enter(ref take);
+            var u1 = _RandomDouble(-1, 1);
+            var u2 = _RandomDouble(-1, 1);
+            _lock.Exit();
+            if (MathUtil.IsZero(u1) && MathUtil.IsZero(u1))
+                return new Vector3f();
+            float r, theta;
+            if (Math.Abs(u1) > Math.Abs(u2))
             {
-                var v = RandomVector3(-1, 1);
-                if (v.LengthSquared < 1)
-                    return v;
+                r = (float)u1;
+                theta = (float)(MathUtil.PIOver4F * u2 / u1);
             }
+            else
+            {
+                r = (float)u2;
+                theta = (float)(MathUtil.PIOver2F - MathUtil.PIOver4F * u1 / u2);
+            }
+            return new Vector3f((float)(r * Math.Cos(theta)), (float)(r * Math.Sin(theta)), 0);
         }
 
-        public static Vector3f RandomVectorInUnitCicle()
+        public static float UniformInDiskPdf()
         {
-            var take = false;
-            _lock.Enter(ref take);
-            var r = Math.PI * 2 * _RandomDouble();
-            _lock.Exit();
-            return new Vector3f((float)Math.Cos(r), (float)Math.Sin(r), 0);
-            //while (true)
-            //{
-            //    var v = RandomVector2(-1f, 1f);
-            //    if (v.Length < 1)
-            //        return new Vector3f(v.X, v.Y, 0);
-            //}
+            return MathUtil.InvPIF;
         }
 
         public static Vector3f Reflect(Vector3f vecIn, Vector3f normal)
@@ -210,7 +281,8 @@ namespace RayTracing
         {
             var r = (1 - refractRadio) / (1 + refractRadio);
             r *= r;
-            return (float)(r + (1 - r) * Math.Pow(1 - c, 5));
+            var x = 1 - c;
+            return r + (1 - r) * x * x * x * x * x;
         }
 
         /// <summary>

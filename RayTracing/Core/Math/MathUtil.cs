@@ -11,6 +11,15 @@ namespace RayTracing.Core
         public const double DBL_EPSILON = 2.2204460492503131e-016;
         public const float SIN_EPSILON = 1.192092896e-07F;
         public const float ZeroTolerancef = 1e-06f;
+        public const float PIF = (float)Math.PI;
+        public const float PIOver2F = (float)Math.PI / 2;
+        public const float PIOver4F = (float)Math.PI / 4;
+        public const float TwoPIF = (float)Math.PI * 2;
+        public const float InvPIF = (float)(1 / Math.PI);
+        public const float Inv2PIF = (float)(0.5 / Math.PI);
+        public const float Inv4PIF = (float)(0.25 / Math.PI);
+        public const float ThreeOverFourPIF = (float)(0.75 / Math.PI);
+        public const float OneThird = (float)(1.0 / 3);
 
         public static double RadiansToDegrees(double radians)
         {

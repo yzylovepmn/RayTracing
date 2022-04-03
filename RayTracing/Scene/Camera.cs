@@ -132,7 +132,7 @@ namespace RayTracing
 
         public Ray3f GetRay(float u, float v)
         {
-            var rd = _aperture * Utilities.RandomVectorInUnitCicle() / 2;
+            var rd = _aperture * Utilities.ConcentricSampleInDisk() / 2;
             var offset = _x * rd.X + _y * rd.Y;
             var position = _position + offset;
             var time = _enableShutter ? Utilities.RandomFloat(_shutterTime1, _shutterTime2) : 0f;

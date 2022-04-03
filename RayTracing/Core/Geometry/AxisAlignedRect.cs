@@ -43,13 +43,19 @@ namespace RayTracing.Core
             switch (_plane)
             {
                 case RectPlane.XY:
-                    boundingBox = new AxisAlignedBox3f(new Vector3f(_min.X, _min.Y, _value - 0.0001f), new Vector3f(_max.X, _max.Y, _value + 0.0001f));
+                    if (_negativeNormal)
+                        boundingBox = new AxisAlignedBox3f(new Vector3f(_min.X, _min.Y, _value), new Vector3f(_max.X, _max.Y, _value + 0.0001f));
+                    else boundingBox = new AxisAlignedBox3f(new Vector3f(_min.X, _min.Y, _value - 0.0001f), new Vector3f(_max.X, _max.Y, _value));
                     break;
                 case RectPlane.YZ:
-                    boundingBox = new AxisAlignedBox3f(new Vector3f(_value - 0.0001f, _min.X, _min.Y), new Vector3f(_value + 0.0001f, _max.X, _max.Y));
+                    if (_negativeNormal)
+                        boundingBox = new AxisAlignedBox3f(new Vector3f(_value, _min.X, _min.Y), new Vector3f(_value + 0.0001f, _max.X, _max.Y));
+                    else boundingBox = new AxisAlignedBox3f(new Vector3f(_value - 0.0001f, _min.X, _min.Y), new Vector3f(_value, _max.X, _max.Y));
                     break;
                 case RectPlane.ZX:
-                    boundingBox = new AxisAlignedBox3f(new Vector3f(_min.Y, _value - 0.0001f, _min.X), new Vector3f(_max.Y, _value + 0.0001f, _max.X));
+                    if (_negativeNormal)
+                        boundingBox = new AxisAlignedBox3f(new Vector3f(_min.Y, _value, _min.X), new Vector3f(_max.Y, _value + 0.0001f, _max.X));
+                    else boundingBox = new AxisAlignedBox3f(new Vector3f(_min.Y, _value - 0.0001f, _min.X), new Vector3f(_max.Y, _value, _max.X));
                     break;
             }
             return true;

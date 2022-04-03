@@ -13,7 +13,7 @@ namespace RayTracing
         {
             _values = new Vector3f[_DIMENSION];
             for (int i = 0; i < _values.Length; i++)
-                _values[i] = Utilities.RandomVectorOnUnitSphere();
+                _values[i] = Utilities.UniformSampleOnSphere();
 
             _x = _GenerateIndexPermute();
             _y = _GenerateIndexPermute();

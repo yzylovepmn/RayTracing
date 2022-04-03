@@ -7,9 +7,20 @@ namespace RayTracing
 {
     public abstract class Material
     {
-        public abstract bool Scatter(Ray3f ray, RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered);
+        public virtual bool Scatter(ref Ray3f ray, ref RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered, out float pdf)
+        {
+            attenuation = new Colorf();
+            scattered = new Ray3f();
+            pdf = 1;
+            return false;
+        }
 
-        public virtual Colorf Emitted(float u, float v, Point3f p)
+        public virtual float ScatteringPdf(ref Ray3f ray, ref RayHitResult hitResult, ref Ray3f scattered)
+        {
+            return 1;
+        }
+
+        public virtual Colorf Emitted(ref RayHitResult ret)
         {
             return Colorf.Black;
         }

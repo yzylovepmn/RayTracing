@@ -31,9 +31,25 @@ namespace RayTracing
                 var meshObject = ret.Hittable as SceneObject;
                 Ray3f scattered;
                 Colorf attenuation;
-                Colorf emitted = meshObject.Material.Emitted(ret.U, ret.V, ret.HitPoint);
-                if (meshObject.Material.Scatter(ray, ret, out attenuation, out scattered))
-                    return emitted + attenuation * RayColor(scattered, background, depth - 1);
+                float pdf;
+                Colorf emitted = meshObject.Material.Emitted(ref ret);
+
+                if (meshObject.Material.Scatter(ref ray, ref ret, out attenuation, out scattered, out pdf))
+                {
+                    //var onLight = new Point3f(Utilities.RandomFloat(123, 423), 554, Utilities.RandomFloat(147, 412));
+                    //var toLight = onLight - ret.HitPoint;
+                    //var dSquared = toLight.LengthSquared;
+                    //toLight.Normalize();
+                    //if (Vector3f.DotProduct(toLight, ret.Normal) < 0)
+                    //    return emitted;
+                    //var area = 79500;
+                    //var lightCos = Math.Abs(toLight.Y);
+                    //if (lightCos < 1e-6)
+                    //    return emitted;
+                    //pdf = dSquared / (lightCos * area);
+                    //scattered = new Ray3f(ret.HitPoint, toLight, ret.HitTime);
+                    return emitted + attenuation * (meshObject.Material.ScatteringPdf(ref ray, ref ret, ref scattered) / pdf) * RayColor(scattered, background, depth - 1);
+                }
                 return emitted;
             }
 

@@ -32,7 +32,7 @@ namespace RayTracing
         public virtual void Init()
         {
             // setup scene
-            _SceneSecondWeek();
+            _SceneFirstWeekend();
 
             _scene.BuildScene();
         }
@@ -57,7 +57,7 @@ namespace RayTracing
 
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.YZ, new Vector2f(0, 0), new Vector2f(555, 555), 555), green));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.YZ, new Vector2f(0, 0), new Vector2f(555, 555), 0), red));
-            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(127, 113), new Vector2f(432, 443), 554), light));
+            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(127, 113), new Vector2f(432, 443), 554, true), light));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(0, 0), new Vector2f(555, 555), 0), white));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(0, 0), new Vector2f(555, 555), 555), white));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.XY, new Vector2f(0, 0), new Vector2f(555, 555), 555), white));
@@ -89,7 +89,7 @@ namespace RayTracing
 
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.YZ, new Vector2f(0, 0), new Vector2f(555, 555), 555), green));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.YZ, new Vector2f(0, 0), new Vector2f(555, 555), 0), red));
-            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(227, 213), new Vector2f(332, 343), 554), light));
+            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(227, 213), new Vector2f(332, 343), 554, true), light));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(0, 0), new Vector2f(555, 555), 0), white));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(0, 0), new Vector2f(555, 555), 555), white));
             _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.XY, new Vector2f(0, 0), new Vector2f(555, 555), 555), white));
@@ -163,7 +163,7 @@ namespace RayTracing
             _scene.Camera.ShutterTime2 = 1;
             _scene.Camera.EnableShutter = true;
 
-            _image.Width = 600;
+            _image.Width = 800;
             _image.Height = (int)(_image.Width / _scene.Camera.Aspect);
 
             var ground = new LambertianMaterial(new Colorf(0.48f, 0.83f, 0.53f));
@@ -189,7 +189,7 @@ namespace RayTracing
             _scene.AddHittable(new SceneObject(node1, ground));
 
             var light = new EmissiveMaterial(new Colorf(7f, 7f, 7f));
-            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(147, 123), new Vector2f(412, 423), 554), light));
+            _scene.AddHittable(new SceneObject(new AxisAlignedRect(RectPlane.ZX, new Vector2f(147, 123), new Vector2f(412, 423), 554, true), light));
 
             var center1 = new Point3f(400, 400, 200);
             var center2 = center1 + new Vector3f(30, 0, 0);

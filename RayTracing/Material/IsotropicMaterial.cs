@@ -23,10 +23,11 @@ namespace RayTracing
         }
         private Texture _albedo;
 
-        public override bool Scatter(Ray3f ray, RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered)
+        public override bool Scatter(ref Ray3f ray, ref RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered, out float pdf)
         {
-            scattered = new Ray3f(hitResult.HitPoint, Utilities.RandomVectorInUnitSphere(), ray.Time);
+            scattered = new Ray3f(hitResult.HitPoint, Utilities.UniformSampleInSphere(), ray.Time);
             attenuation = _albedo.Sample(hitResult.U, hitResult.V, hitResult.HitPoint);
+            pdf = 1;
             return true;
         }
     }

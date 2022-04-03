@@ -33,15 +33,16 @@ namespace RayTracing
         }
         private float _fuzz;
 
-        public override bool Scatter(Ray3f ray, RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered)
+        public override bool Scatter(ref Ray3f ray, ref RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered, out float pdf)
         {
             var dir = ray.Direction;
             dir.Normalize();
             var reflected = Utilities.Reflect(dir, hitResult.Normal);
             if (!MathUtil.IsZero(_fuzz))
-                reflected += _fuzz * Utilities.RandomVectorInUnitSphere();
+                reflected += _fuzz * Utilities.UniformSampleInSphere();
             scattered = new Ray3f(hitResult.HitPoint, reflected, ray.Time);
             attenuation = _albedo;
+            pdf = 1;
             return Vector3f.DotProduct(reflected, hitResult.Normal) > 0;
         }
     }

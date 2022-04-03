@@ -23,16 +23,19 @@ namespace RayTracing
         }
         private Texture _emissive;
 
-        public override bool Scatter(Ray3f ray, RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered)
+        public override bool Scatter(ref Ray3f ray, ref RayHitResult hitResult, out Colorf attenuation, out Ray3f scattered, out float pdf)
         {
             attenuation = Colorf.Black;
             scattered = new Ray3f();
+            pdf = 1;
             return false;
         }
 
-        public override Colorf Emitted(float u, float v, Point3f p)
+        public override Colorf Emitted(ref RayHitResult ret)
         {
-            return _emissive.Sample(u, v, p);
+            if (ret.IsFrontFace)
+                return _emissive.Sample(ret.U, ret.V, ret.HitPoint);
+            return base.Emitted(ref ret);
         }
     }
 }
